@@ -151,8 +151,11 @@ class Flapjack():
         params['plotOptions'] = plot_options
         params['analysis'] = analysis_params
         return params
+
+    def analysis(self, **kwargs):
+        return asyncio.run(self._analysis(**kwargs))
         
-    async def analysis(self, **kwargs):
+    async def _analysis(self, **kwargs):
         self.refresh()
         uri = self.ws_url_base + '/ws/analysis/analysis?token=' + self.access_token
 
@@ -195,7 +198,10 @@ class Flapjack():
                 print('Error: the server returned an invalid response')
                 return
             
-    async def plot(self, **kwargs): #data_filter, plot_options):
+    def plot(self, **kwargs):
+        return asyncio.run(self._plot(**kwargs))
+
+    async def _plot(self, **kwargs): #data_filter, plot_options):
         self.refresh()
         uri = self.ws_url_base + '/ws/plot/plot?token=' + self.access_token
 

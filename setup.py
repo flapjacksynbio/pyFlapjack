@@ -14,6 +14,7 @@ setup(name='flapjack',
         'tqdm', 
         'plotly', 
         'asyncio', 
+        'nest_asyncio',
         'requests_jwt'
         ],
     setup_requires=[
@@ -24,6 +25,7 @@ setup(name='flapjack',
         'tqdm', 
         'plotly', 
         'asyncio', 
+        'nest_asyncio',
         'requests_jwt'
         ],
     packages=['flapjack'],
