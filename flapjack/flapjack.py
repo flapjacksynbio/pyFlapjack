@@ -169,7 +169,6 @@ class Flapjack():
             "type":"analysis",
             "parameters": params
         }
-        print(payload)
         async with websockets.connect(uri, max_size=1e8) as websocket:
             await websocket.send(json.dumps(payload))
             response_json = await websocket.recv()
