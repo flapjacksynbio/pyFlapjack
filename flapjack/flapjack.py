@@ -45,6 +45,7 @@ class Flapjack():
         self.ws_url_base = 'ws://' + url_base
         self.access_token = None
         self.refresh_token = None
+        self.username = None
 
     def __del__(self):
         self.log_out()
@@ -66,6 +67,7 @@ class Flapjack():
             print(f'Log in failed.')
         else:
             if self.handle_response(s):
+                self.username = username
                 data = s.json()
                 self.access_token = data['access']
                 self.refresh_token = data['refresh']
@@ -91,7 +93,39 @@ class Flapjack():
             data={'refresh': self.refresh_token}
         )
         self.access_token = s.json()['access']
-        
+
+    def create(self, model, **kwargs):
+        url = self.http_url_base + f'/api/{model}/'
+        s = requests.post(
+                url,
+                headers={'Authorization': 'Bearer ' + self.access_token},
+                data=kwargs
+            )
+        if s:
+            return pd.DataFrame([s.json()])
+        else:
+            print(f'Problem creating {model}:')
+            print(s.text)
+            return False
+
+    def delete(self, model, id, confirm=True):
+        if confirm:
+            confirmed = input(f'If you are sure you want to delete {model} with id={id} type "yes"')
+            if confirmed != 'yes':
+                return False
+        url = self.http_url_base + f'/api/{model}/{id}/'
+        s = requests.delete(
+                url,
+                headers={'Authorization': 'Bearer ' + self.access_token}
+            )
+        if s:
+            return True
+        else:
+            print(f'Problem deleting {model} id={id}:')
+            print(s.text)
+            return False
+
+
     def query(self, model, **kwargs):
         if model not in self.models:
             print(f'Error: model {model} does not exist')
