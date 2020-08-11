@@ -32,12 +32,14 @@ class Flapjack():
     models = [
         'study',
         'assay',
+        'sample',
         'strain',
         'media',
         'vector',
         'dna',
         'signal',
-        'chemical'
+        'chemical',
+        'measurement'
     ]
     
     def __init__(self, url_base = 'localhost:8000'):
@@ -73,7 +75,7 @@ class Flapjack():
                 self.refresh_token = data['refresh']
                 self.username = username
 
-    def log_out(self, username):
+    def log_out(self):
         if self.username:
             try:
                 s = requests.post(
@@ -125,8 +127,7 @@ class Flapjack():
             print(s.text)
             return False
 
-
-    def query(self, model, **kwargs):
+    def get(self, model, **kwargs):
         if model not in self.models:
             print(f'Error: model {model} does not exist')
             return
@@ -154,7 +155,7 @@ class Flapjack():
     def parse_params(self, **kwargs):
         # Get search params and convert ids to python int
         params = {
-            model + 'Ids': [
+            model: [
                 int(id) for id in kwargs.get(model, [])
             ] for model in self.models
         }
@@ -186,6 +187,40 @@ class Flapjack():
         params['analysis'] = analysis_params
         return params
 
+    def measurements(self, **kwargs):
+        return asyncio.run(self._measurements(**kwargs))
+        
+    async def _measurements(self, **kwargs):
+        self.refresh()
+        uri = self.ws_url_base + '/ws/registry/measurements?token=' + self.access_token
+
+        # Get the parameter dict from arguments
+        params = self.parse_params(**kwargs)
+        if len(params)==0:
+            return
+        
+        # Data to send in request
+        payload = {
+            "type":"measurements",
+            "parameters": params
+        }
+        async with websockets.connect(uri, max_size=1e8) as websocket:
+            await websocket.send(json.dumps(payload))
+            response_json = await websocket.recv()
+            response_data = json.loads(response_json)
+            if response_data['type']=='error':
+                msg = response_data['data']['message']
+                print(f'Error: {msg}')
+            if response_data['type']=='measurements':
+                df_json = response_data['data']
+                if df_json:
+                    return pd.read_json(df_json)
+                else:
+                    return
+            else:
+                print('Error: the server returned an invalid response')
+                return
+
     def analysis(self, **kwargs):
         return asyncio.run(self._analysis(**kwargs))
         
@@ -211,6 +246,7 @@ class Flapjack():
                 msg = response_data['data']['message']
                 print(f'Error: {msg}')
 
+            progress = 0
             with tqdm(total=100) as pbar:
                 progress_prev = 0
                 while response_data['type']=='progress_update':
@@ -252,6 +288,7 @@ class Flapjack():
             await websocket.send(json.dumps(payload))
             response_json = await websocket.recv()
             response_data = json.loads(response_json)
+            progress = 0
             with tqdm(total=100) as pbar:
                 progress_prev = 0
                 while response_data['type']=='progress_update':
