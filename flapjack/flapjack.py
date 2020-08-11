@@ -97,6 +97,7 @@ class Flapjack():
         self.access_token = s.json()['access']
 
     def create(self, model, **kwargs):
+        print(kwargs, flush=True)
         url = self.http_url_base + f'/api/{model}/'
         s = requests.post(
                 url,
