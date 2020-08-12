@@ -3,17 +3,22 @@ import flapjack
 from flapjack import Flapjack
 import sys
 
-def step(p, signal, dt):
+def step(p, signal, growth_rate, dt):
     '''
     Update protein levels p according to signal
     '''
-    dpdt = signal**2 / (1 + signal**2) - p
+    dpdt = growth_rate * signal**2 / (1 + signal**2) - growth_rate * p
     return p + dpdt*dt
 
-if __name__=='__main__':
-    if len(sys.argv)<2:
+def main(argv):
+    if len(argv)<3:
+        print('''
+        Usage:
+            python simulate.py "<Assay name>" "<Description>"
+        ''')
         return
-    assay_name = sys.argv[1]
+    assay_name = argv[1]
+    assay_description = argv[2]
 
     # Make connection to Flapjack
     fj = Flapjack(url_base='localhost:8000')
@@ -31,7 +36,7 @@ if __name__=='__main__':
     # Add a new assay
     assay = fj.create('assay', 
                         name=assay_name,
-                        description='First replicate for testing',
+                        description=assay_description,
                         machine='Simulator',
                         temperature=37,
                         study=study.id[0]
@@ -79,17 +84,28 @@ if __name__=='__main__':
         sample = fj.create('sample',
                         row='A', col=1,
                         media=media.id[0],
-                        strain=media.id[0],
-                        vector=media.id[0],
+                        strain=strain.id[0],
+                        vector=vector.id[0],
                         assay=assay.id[0],
                         supplements=[supplement.id[0]]
                         )
         # Create the measurements for this sample
-        dt = 25/100
+        dt = 24/100
         p = 0
         for t in range(100):
-            p = step(p, conc, dt)
-            measurement = fj.create('measurement', signal=signal.id[0], time=t*dt, value=p, sample=sample.id[0])
-            odval = flapjack.gompertz(t, 0.01, 1, 1, 4)
-            od_measurement = fj.create('measurement', signal=od.id[0], time=t*dt, value=odval, sample=sample.id[0])
+            growth_rate = flapjack.gompertz_growth_rate(t*dt, 0.01, 1, 1, 4)
+            odval = flapjack.gompertz(t*dt, 0.01, 1, 1, 4)
+            measurement = fj.create('measurement', 
+                                    signal=signal.id[0], 
+                                    time=t * dt, 
+                                    value=p * odval, 
+                                    sample=sample.id[0])
+            od_measurement = fj.create('measurement',
+                                    signal=od.id[0], 
+                                    time=t*dt, 
+                                    value=odval, 
+                                    sample=sample.id[0])
+            p = step(p, conc, growth_rate, dt)
         
+if __name__=='__main__':
+    main(sys.argv)
