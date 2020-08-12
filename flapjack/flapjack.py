@@ -24,7 +24,7 @@ index_params = [
 ]
 
 replace_columns_with_ids = [
-    'dnas'
+    #'dnas'
 ]
 
 # Main class that provides access to flapjack
@@ -39,6 +39,7 @@ class Flapjack():
         'dna',
         'signal',
         'chemical',
+        'supplement',
         'measurement'
     ]
     
@@ -96,8 +97,21 @@ class Flapjack():
         )
         self.access_token = s.json()['access']
 
+    def patch(self, model, id, **kwargs):
+        url = self.http_url_base + f'/api/{model}/{id}/'
+        s = requests.patch(
+                url,
+                headers={'Authorization': 'Bearer ' + self.access_token},
+                data=kwargs
+            )
+        if s:
+            return pd.DataFrame([s.json()])
+        else:
+            print(f'Problem modifying {model}:')
+            print(s.text)
+            return False
+
     def create(self, model, **kwargs):
-        print(kwargs, flush=True)
         url = self.http_url_base + f'/api/{model}/'
         s = requests.post(
                 url,
@@ -131,7 +145,7 @@ class Flapjack():
     def get(self, model, **kwargs):
         if model not in self.models:
             print(f'Error: model {model} does not exist')
-            return
+            return pd.DataFrame()
         self.refresh()
         results = []
         url = self.http_url_base + f'/api/{model}/'
@@ -147,10 +161,6 @@ class Flapjack():
         df = pd.DataFrame(results)
         # Convert ids from np.int64 to int
         df.index = df.index.astype(np.int)
-        # Convert columns with objects to their ids
-        for col in df.columns:
-            if col in replace_columns_with_ids:
-                df[col] = [[dd['id'] for dd in d] for d in df[col]]
         return df
     
     def parse_params(self, **kwargs):
