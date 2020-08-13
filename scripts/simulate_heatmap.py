@@ -55,7 +55,7 @@ def main(argv):
     # Get or create the DNA and vector
     dna = fj.get('dna', name='pSIM1')
     if len(dna)==0:
-        dna = fj.create('dna', name='pSIM1', assays=[assay.id[0]])
+        dna = fj.create('dna', name='pSIM1')
     vector = fj.get('vector', name='pSIM1')
     if len(vector)==0:
         vector = fj.create('vector', name='pSIM1', dnas=[dna.id[0]])
