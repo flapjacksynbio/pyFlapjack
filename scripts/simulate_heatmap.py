@@ -98,13 +98,14 @@ def main(argv):
             # Create a new sample
             supplements = [supplement1.id[0], supplement2.id[0]]
             sample = fj.create('sample',
-                            row='A', col=1,
+                            row=i, col=j,
                             media=media.id[0],
                             strain=strain.id[0],
                             vector=vector.id[0],
                             assay=assay.id[0],
-                            supplements=supplements
                             )
+            # Add the supplements to the sample
+            fj.patch('sample', sample.id[0], supplements=supplements)
             # Create the measurements for this sample
             dt = 24/100
             p = 0
