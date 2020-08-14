@@ -82,7 +82,7 @@ def main(argv):
         od = fj.create('signal', name='SOD', color='black', description='Simulated OD')
 
     # Create the samples
-    for i in range(1):
+    for i in range(5):
         # Create a new sample
         sample = fj.create('sample',
                         row=1, col=i,
@@ -100,22 +100,22 @@ def main(argv):
             measurement = fj.create('measurement', 
                                     signal=signal1.id[0], 
                                     time=t * dt, 
-                                    value=p[0] * odval, 
+                                    value=p[0] * odval + np.random.normal(scale=5/3), 
                                     sample=sample.id[0])
             measurement = fj.create('measurement', 
                                     signal=signal2.id[0], 
                                     time=t * dt, 
-                                    value=p[1] * odval, 
+                                    value=p[1] * odval + np.random.normal(scale=5/3), 
                                     sample=sample.id[0])
             measurement = fj.create('measurement', 
                                     signal=signal3.id[0], 
                                     time=t * dt, 
-                                    value=p[2] * odval, 
+                                    value=p[2] * odval + np.random.normal(scale=5/3), 
                                     sample=sample.id[0])
             od_measurement = fj.create('measurement',
                                     signal=od.id[0], 
                                     time=t*dt, 
-                                    value=odval, 
+                                    value=odval + np.random.normal(scale=0.05), 
                                     sample=sample.id[0])
             p = step(p, growth_rate, dt)
 
