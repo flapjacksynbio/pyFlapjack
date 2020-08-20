@@ -1,7 +1,7 @@
 import numpy as np
 import flapjack
 from flapjack import Flapjack
-import sys
+import pandas as pd
 
 class Simulator:
     def __init__(
@@ -11,12 +11,14 @@ class Simulator:
         study_description='',
         assay_description='',
         dna_name='',
+        init_proteins=[0]
         ):
         self.assay_name = assay_name
         self.assay_description = assay_description
         self.study_name = study_name
         self.study_description = study_description
         self.dna_name = dna_name
+        self.init_proteins = np.array(init_proteins)
 
     def create_meta_objects(self, fj):
         # Create a new study or re-use existing study
@@ -56,7 +58,7 @@ class Simulator:
         if len(self.chemical)==0:
             self.chemical = fj.create('chemical', name='A', description='Simulated inducer')
 
-    def create_data(self, fj, step, n_samples, nt, dt):
+    def create_data(self, fj, step, n_samples, nt, dt, sim_steps):
         # Add a new assay
         self.assay = fj.create('assay', 
                             name=self.assay_name,
@@ -68,9 +70,10 @@ class Simulator:
 
         # Create the samples
         for j in range(n_samples):
-            for i in range(12):
+            print(f'Uploading sample {j} of {n_samples}')
+            for i in range(24):
                 # Inducer concentration
-                conc = 10**(i/2-3)
+                conc = 10**(i/2-6)
                 # See if a supplement already exists
                 supplement = fj.get('supplement', chemical=self.chemical.id[0], concentration=conc)
                 if len(supplement)==0:
@@ -86,18 +89,23 @@ class Simulator:
                                 )
                 fj.patch('sample', sample.id[0], supplements=[supplement.id[0]])
                 # Create the measurements for this sample
-                p = 0
+                p = self.init_proteins
+                fp = []
+                od = [] 
                 for t in range(nt):
-                    growth_rate = flapjack.gompertz_growth_rate(t*dt, 0.01, 1, 1, 4)
                     odval = flapjack.gompertz(t*dt, 0.01, 1, 1, 4)
-                    measurement = fj.create('measurement', 
-                                            signal=self.signal.id[0], 
-                                            time=t * dt, 
-                                            value=p * odval, 
-                                            sample=sample.id[0])
-                    od_measurement = fj.create('measurement',
-                                            signal=self.od.id[0], 
-                                            time=t*dt, 
-                                            value=odval, 
-                                            sample=sample.id[0])
-                    p = step(p, conc, growth_rate, dt)
+                    # Update sim by sub-timesteps
+                    for tt in range(sim_steps):
+                        growth_rate = flapjack.gompertz_growth_rate((t + tt / sim_steps) * dt, 0.01, 1, 1, 4)
+                        p = step(p, conc, growth_rate, dt/sim_steps)
+                    fp.append(p[0] * odval + np.random.normal(scale=10))
+                    od.append(odval + np.random.normal(scale=0.01))
+                times = np.arange(nt) * dt
+                fp_meas = pd.DataFrame()
+                fp_meas['Time'] = times
+                fp_meas['Measurement'] = np.array(fp)
+                od_meas = pd.DataFrame()
+                od_meas['Time'] = times
+                od_meas['Measurement'] = np.array(od)
+                fj.upload_measurements(fp_meas, signal=[self.signal.id[0]], sample=[sample.id[0]])
+                fj.upload_measurements(od_meas, signal=[self.od.id[0]], sample=[sample.id[0]])
