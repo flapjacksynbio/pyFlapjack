@@ -3,17 +3,19 @@ import flapjack
 from flapjack import Flapjack
 import sys
 
-alpha = 1e2
-gamma = 2
+alpha1,alpha2,alpha3 = 1e2,1e2,1e2
+gamma = 1
+K1,K2,K3 = 1,1,1
+n1,n2,n3 = 2,2,2
 
 def step(p, growth_rate, dt):
     '''
     Update protein levels p according to signal
     '''
     p1,p2,p3 = p
-    dp1dt = alpha / (1 + p3*p3) - gamma * p1 - growth_rate * p1
-    dp2dt = alpha / (1 + p1*p1) - gamma * p2 - growth_rate * p2
-    dp3dt = alpha / (1 + p2*p2) - gamma * p3 - growth_rate * p3
+    dp1dt = alpha1 / (1 + (p3/K1)**n1) - gamma * p1 - growth_rate * p1
+    dp2dt = alpha2 / (1 + (p1/K2)**n2) - gamma * p2 - growth_rate * p2
+    dp3dt = alpha3 / (1 + (p2/K3)**n3) - gamma * p3 - growth_rate * p3
     p[0] += dp1dt * dt
     p[1] += dp2dt * dt
     p[2] += dp3dt * dt
@@ -93,7 +95,7 @@ def main(argv):
                         )
         # Create the measurements for this sample
         dt = 24/100
-        p = np.array([0, 5, 0])
+        p = [0, 5, 0]
         for t in range(100):
             growth_rate = flapjack.gompertz_growth_rate(t*dt, 0.01, 1, 1, 4)
             odval = flapjack.gompertz(t*dt, 0.01, 1, 1, 4)
