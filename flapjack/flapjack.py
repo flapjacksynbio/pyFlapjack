@@ -198,6 +198,44 @@ class Flapjack():
         params['analysis'] = analysis_params
         return params
 
+    def upload_measurements(self, df, **kwargs):
+        return asyncio.run(self._upload_measurements(df, **kwargs))
+        
+    async def _upload_measurements(self, df, **kwargs):
+        self.refresh()
+        uri = self.ws_url_base + '/ws/registry/measurements?token=' + self.access_token
+
+        # Get the parameter dict from arguments
+        params = self.parse_params(**kwargs)
+        if len(params)==0:
+            return
+
+        # The measurement data to upload
+        data = df.to_json()
+        if len(data) == 0:
+            print('Empty dataframe, upload aborted', flush=True)
+            return
+
+        # Data to send in request
+        payload = {
+            "type": "upload",
+            "parameters": params,
+            "data": data
+        }
+        async with websockets.connect(uri, max_size=1e8) as websocket:
+            await websocket.send(json.dumps(payload))
+            response_json = await websocket.recv()
+            response_data = json.loads(response_json)
+            if response_data['type']=='error':
+                msg = response_data['data']['message']
+                print(f'Error: {msg}')
+            if response_data['type']=='upload':
+                msg = response_data['data']
+                return msg == 'success'
+            else:
+                print('Error: the server returned an invalid response')
+                return False
+
     def measurements(self, **kwargs):
         return asyncio.run(self._measurements(**kwargs))
         
