@@ -3,6 +3,8 @@ import flapjack
 from flapjack import Flapjack
 import pandas as pd
 
+colors = ['red', 'green', 'blue']
+
 class Simulator:
     def __init__(
         self,
@@ -11,7 +13,11 @@ class Simulator:
         study_description='',
         assay_description='',
         dna_name='',
-        init_proteins=[0]
+        init_proteins=[0],
+        concentrations=[0],
+        n_signals=1,
+        fluo_noise=0.01,
+        od_noise=0.01
         ):
         self.assay_name = assay_name
         self.assay_description = assay_description
@@ -19,6 +25,11 @@ class Simulator:
         self.study_description = study_description
         self.dna_name = dna_name
         self.init_proteins = np.array(init_proteins)
+        self.concentrations = concentrations
+        self.n_signals = n_signals
+        self.signals = []
+        self.fluo_noise = fluo_noise
+        self.od_noise = od_noise
 
     def create_meta_objects(self, fj):
         # Create a new study or re-use existing study
@@ -46,17 +57,21 @@ class Simulator:
             self.vector = fj.create('vector', name=self.dna_name, dnas=[self.dna.id[0]])
 
         # Get or create the signals
-        self.signal = fj.get('signal', name='SFP')
-        if len(self.signal)==0:
-            self.signal = fj.create('signal', name='SFP', color='green', description='Simulated signal')
+        for i in range(self.n_signals):
+            signal = fj.get('signal', name=f'SFP{i}')
+            if len(signal)==0:
+                signal = fj.create('signal', name=f'SFP{i}', color=colors[i], description='Simulated signal')
+            self.signals.append(signal)
         self.od = fj.get('signal', name='SOD')
         if len(self.od)==0:
             self.od = fj.create('signal', name='SOD', color='black', description='Simulated OD')
 
-        # Get or create the chemical and supplement
-        self.chemical = fj.get('chemical', name='A')
-        if len(self.chemical)==0:
-            self.chemical = fj.create('chemical', name='A', description='Simulated inducer')
+        if len(self.concentrations) > 1:
+            # Get or create the chemical and supplement
+            self.chemical = fj.get('chemical', name='A', description='Simulated inducer')
+            if len(self.chemical)==0:
+                print('Creating chemical A')
+                self.chemical = fj.create('chemical', name='A', description='Simulated inducer')
 
     def create_data(self, fj, step, n_samples, nt, dt, sim_steps):
         # Add a new assay
@@ -70,15 +85,8 @@ class Simulator:
 
         # Create the samples
         for j in range(n_samples):
-            print(f'Uploading sample {j} of {n_samples}')
-            for i in range(24):
-                # Inducer concentration
-                conc = 10**(i/2-6)
-                # See if a supplement already exists
-                supplement = fj.get('supplement', chemical=self.chemical.id[0], concentration=conc)
-                if len(supplement)==0:
-                    supp_name = self.chemical.name[0] + f' {conc}'
-                    supplement = fj.create('supplement', name=supp_name, chemical=self.chemical.id[0], concentration=conc)
+            print(f'Uploading dataset {j+1} of {n_samples}')
+            for i, conc in enumerate(self.concentrations):
                 # Create a new sample
                 sample = fj.create('sample',
                                 row=j, col=i,
@@ -87,25 +95,33 @@ class Simulator:
                                 vector=self.vector.id[0],
                                 assay=self.assay.id[0],
                                 )
-                fj.patch('sample', sample.id[0], supplements=[supplement.id[0]])
+                if conc > 0:
+                    # See if a supplement already exists
+                    supplement = fj.get('supplement', chemical=self.chemical.id[0], concentration=conc)
+                    if len(supplement)==0:
+                        supp_name = self.chemical.name[0] + f' {conc}'
+                        supplement = fj.create('supplement', name=supp_name, chemical=self.chemical.id[0], concentration=conc)
+                    fj.patch('sample', sample.id[0], supplements=[supplement.id[0]])
                 # Create the measurements for this sample
-                p = self.init_proteins
-                fp = []
-                od = [] 
+                p = list(self.init_proteins)
+                fp = np.zeros((nt, self.n_signals))
+                od = np.zeros((nt,)) 
                 for t in range(nt):
                     odval = flapjack.gompertz(t*dt, 0.01, 1, 1, 4)
                     # Update sim by sub-timesteps
                     for tt in range(sim_steps):
                         growth_rate = flapjack.gompertz_growth_rate((t + tt / sim_steps) * dt, 0.01, 1, 1, 4)
                         p = step(p, conc, growth_rate, dt/sim_steps)
-                    fp.append(p[0] * odval + np.random.normal(scale=10))
-                    od.append(odval + np.random.normal(scale=0.01))
+                    for s in range(self.n_signals):
+                        fp[t,s] = p[s] * odval
+                    od[t] = odval
                 times = np.arange(nt) * dt
-                fp_meas = pd.DataFrame()
-                fp_meas['Time'] = times
-                fp_meas['Measurement'] = np.array(fp)
+                for s in range(self.n_signals):
+                    fp_meas = pd.DataFrame()
+                    fp_meas['Time'] = times
+                    fp_meas['Measurement'] = fp[:,s] + fp[:,s].max() * np.random.normal(size=fp.shape[:1], scale=self.fluo_noise)
+                    fj.upload_measurements(fp_meas, signal=[self.signals[s].id[0]], sample=[sample.id[0]])
                 od_meas = pd.DataFrame()
                 od_meas['Time'] = times
-                od_meas['Measurement'] = np.array(od)
-                fj.upload_measurements(fp_meas, signal=[self.signal.id[0]], sample=[sample.id[0]])
+                od_meas['Measurement'] = od + od.max() * np.random.normal(size=od.shape, scale=self.od_noise)
                 fj.upload_measurements(od_meas, signal=[self.od.id[0]], sample=[sample.id[0]])
