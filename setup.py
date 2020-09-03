@@ -15,7 +15,8 @@ setup(name='flapjack',
         'plotly', 
         'asyncio', 
         'nest_asyncio',
-        'requests_jwt'
+        'requests_jwt',
+	'statsmodels'
         ],
     setup_requires=[
         'numpy', 
@@ -26,7 +27,8 @@ setup(name='flapjack',
         'plotly', 
         'asyncio', 
         'nest_asyncio',
-        'requests_jwt'
+        'requests_jwt',
+	'statsmodels'
         ],
     packages=['flapjack'],
     python_requires='>=3',
