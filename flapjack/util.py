@@ -1,5 +1,50 @@
 from scipy.optimize import curve_fit
 import numpy as np
+import plotly.graph_objects as go
+
+# Layout plots returned by flapjack
+def layout_print(fig, width=3.3, height=1.5, font_size=6):
+    '''
+    Layout figure optimized for print at 300dpi
+
+    fig = figure to layout
+    width,height = size in inches
+    font_size = font size in pts
+
+    Returns:
+    fig = figure with correct layout
+    '''
+        
+    width = width*300
+    height = height*300
+    font_size = font_size * 300/72
+    fig.update_layout(  autosize=False,
+                        width=width, height=height,
+                        margin=go.layout.Margin(
+                            l=50,
+                            r=50,
+                            b=50,
+                            t=50,
+                            pad=0
+                        ),
+                        paper_bgcolor="rgb(255,255,255)",
+                        template='simple_white',
+                        font_size=font_size
+                    )
+    for a in fig['layout']['annotations']:
+        a['font'] = dict(size=font_size)
+    fig.update_traces(marker=dict(size=6), line=dict(width=4), selector=dict(type='scatter'))
+    fig.update_traces(marker=dict(size=6), line=dict(width=4), selector=dict(type='line'))
+    fig.update_traces(line=dict(width=0), selector=dict(fill="toself"))
+    fig.update_yaxes(linewidth=3, 
+                    tickwidth=3, 
+                    title_font=dict(size=font_size), 
+                    tickfont=dict(size=font_size))
+    fig.update_xaxes(linewidth=3, 
+                    tickwidth=3, 
+                    title_font=dict(size=font_size), 
+                    tickfont=dict(size=font_size))
+    return fig
 
 # Model functions for fitting to data
 # -----------------------------------------------------------------------------------

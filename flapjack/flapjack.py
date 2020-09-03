@@ -86,7 +86,7 @@ class Flapjack():
                     }
                 )
             except:
-                print(f'Log out failed for {self.username}.')
+                pass #print(f'Log out failed for {self.username}.')
         else:
             print('No user logged in.')
                 
@@ -222,7 +222,7 @@ class Flapjack():
             "parameters": params,
             "data": data
         }
-        async with websockets.connect(uri, max_size=1e8) as websocket:
+        async with websockets.connect(uri, max_size=1e10) as websocket:
             await websocket.send(json.dumps(payload))
             response_json = await websocket.recv()
             response_data = json.loads(response_json)
@@ -253,7 +253,7 @@ class Flapjack():
             "type":"measurements",
             "parameters": params
         }
-        async with websockets.connect(uri, max_size=1e8) as websocket:
+        async with websockets.connect(uri, max_size=1e10) as websocket:
             await websocket.send(json.dumps(payload))
             response_json = await websocket.recv()
             response_data = json.loads(response_json)
@@ -287,25 +287,34 @@ class Flapjack():
             "type":"analysis",
             "parameters": params
         }
-        async with websockets.connect(uri, max_size=1e8) as websocket:
+        async with websockets.connect(uri) as websocket:
             await websocket.send(json.dumps(payload))
             response_json = await websocket.recv()
             response_data = json.loads(response_json)
             if response_data['type']=='error':
                 msg = response_data['data']['message']
                 print(f'Error: {msg}')
+            progress = response_data['progress']
 
-            progress = 0
             with tqdm(total=100) as pbar:
+                rows = []
                 progress_prev = 0
                 while response_data['type']=='progress_update':
-                    progress = response_data['data']['progress']
+                #while progress < 100:
+                    progress = response_data['progress']
+                    rows.append(pd.read_json(response_data['data']))
                     response_json = await websocket.recv()
                     response_data = json.loads(response_json)
                     pbar.update(progress-progress_prev)
                     progress_prev = progress
                 pbar.update(100-progress)
                 pbar.close()
+            result = pd.DataFrame()
+            if len(rows):
+                result = result.append(rows)
+            print('Returning dataframe')
+            return result
+            '''
             if response_data['type']=='analysis':
                 df_json = response_data['data']
                 if df_json:
@@ -315,7 +324,8 @@ class Flapjack():
             else:
                 print('Error: the server returned an invalid response')
                 return
-            
+            '''
+
     def plot(self, **kwargs):
         return asyncio.run(self._plot(**kwargs))
 
@@ -333,7 +343,7 @@ class Flapjack():
             "type":"plot",
             "parameters": params
         }
-        async with websockets.connect(uri, max_size=1e8) as websocket:
+        async with websockets.connect(uri, max_size=1e10) as websocket:
             await websocket.send(json.dumps(payload))
             response_json = await websocket.recv()
             response_data = json.loads(response_json)
