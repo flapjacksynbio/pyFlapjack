@@ -16,7 +16,11 @@ setup(name='flapjack',
         'asyncio', 
         'nest_asyncio',
         'requests_jwt',
-	'statsmodels'
+	    'statsmodels',
+	    'jupyter',
+	    'websockets',
+	    'matplotlib',
+	    'seaborn'
         ],
     setup_requires=[
         'numpy', 
@@ -28,9 +32,13 @@ setup(name='flapjack',
         'asyncio', 
         'nest_asyncio',
         'requests_jwt',
-	'statsmodels'
+	    'statsmodels',
+	    'jupyter',
+	    'websockets',
+	    'matplotlib',
+	    'seaborn'
         ],
     packages=['flapjack'],
-    python_requires='>=3',
+    python_requires='>=3.8',
     version='v0.0'
 )
