@@ -20,7 +20,9 @@ setup(name='flapjack',
 	    'jupyter',
 	    'websockets',
 	    'matplotlib',
-	    'seaborn'
+	    'seaborn',
+	    'pysbol',
+	    'psutil'
         ],
     setup_requires=[
         'numpy', 
@@ -36,9 +38,14 @@ setup(name='flapjack',
 	    'jupyter',
 	    'websockets',
 	    'matplotlib',
-	    'seaborn'
+	    'seaborn',
+	    'pysbol',
+	    'psutil'
         ],
     packages=['flapjack'],
     python_requires='>=3.8',
     version='v0.0'
 )
+
+# add packages via conda:
+# conda install -c plotly plotly-orca
