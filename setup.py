@@ -43,7 +43,7 @@ setup(name='flapjack',
 	    'psutil'
         ],
     packages=['flapjack'],
-    python_requires='>=3.8',
+    python_requires='>=3',
     version='v0.0'
 )
 
