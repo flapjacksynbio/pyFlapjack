@@ -107,11 +107,11 @@ class Simulator:
                 fp = np.zeros((nt, self.n_signals))
                 od = np.zeros((nt,)) 
                 for t in range(nt):
-                    odval = flapjack.gompertz(t*dt, 0.01, 1, 1, 4)
                     # Update sim by sub-timesteps
                     for tt in range(sim_steps):
                         growth_rate = flapjack.gompertz_growth_rate((t + tt / sim_steps) * dt, 0.01, 1, 1, 4)
                         p = step(p, conc, growth_rate, dt/sim_steps)
+                    odval = flapjack.gompertz((t + tt/sim_steps)*dt, 0.01, 1, 1, 4)
                     for s in range(self.n_signals):
                         fp[t,s] = p[s] * odval
                     od[t] = odval
@@ -119,9 +119,11 @@ class Simulator:
                 for s in range(self.n_signals):
                     fp_meas = pd.DataFrame()
                     fp_meas['Time'] = times
-                    fp_meas['Measurement'] = fp[:,s] + fp[:,s].max() * np.random.normal(size=fp.shape[:1], scale=self.fluo_noise)
+                    sigma = fp[:,s] / np.sqrt(self.fluo_noise)
+                    fp_meas['Measurement'] = fp[:,s] + sigma * np.random.normal(size=fp.shape[:1])
                     fj.upload_measurements(fp_meas, signal=[self.signals[s].id[0]], sample=[sample.id[0]])
                 od_meas = pd.DataFrame()
                 od_meas['Time'] = times
-                od_meas['Measurement'] = od + od.max() * np.random.normal(size=od.shape, scale=self.od_noise)
+                sigma = od / np.sqrt(self.od_noise)
+                od_meas['Measurement'] = od + sigma * np.random.normal(size=od.shape)
                 fj.upload_measurements(od_meas, signal=[self.od.id[0]], sample=[sample.id[0]])
