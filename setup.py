@@ -16,7 +16,13 @@ setup(name='flapjack',
         'asyncio', 
         'nest_asyncio',
         'requests_jwt',
-	'statsmodels'
+	    'statsmodels',
+	    'jupyter',
+	    'websockets',
+	    'matplotlib',
+	    'seaborn',
+	    'pysbol',
+	    'psutil'
         ],
     setup_requires=[
         'numpy', 
@@ -28,9 +34,18 @@ setup(name='flapjack',
         'asyncio', 
         'nest_asyncio',
         'requests_jwt',
-	'statsmodels'
+	    'statsmodels',
+	    'jupyter',
+	    'websockets',
+	    'matplotlib',
+	    'seaborn',
+	    'pysbol',
+	    'psutil'
         ],
     packages=['flapjack'],
     python_requires='>=3',
     version='v0.0'
 )
+
+# add packages via conda:
+# conda install -c plotly plotly-orca
