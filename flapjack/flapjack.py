@@ -98,6 +98,7 @@ class Flapjack():
         self.access_token = s.json()['access']
 
     def patch(self, model, id, **kwargs):
+        self.refresh()
         url = self.http_url_base + f'/api/{model}/{id}/'
         s = requests.patch(
                 url,
@@ -112,6 +113,7 @@ class Flapjack():
             return False
 
     def create(self, model, **kwargs):
+        self.refresh()
         url = self.http_url_base + f'/api/{model}/'
         s = requests.post(
                 url,
@@ -130,6 +132,7 @@ class Flapjack():
             confirmed = input(f'If you are sure you want to delete {model} with id={id} type "yes"')
             if confirmed != 'yes':
                 return False
+        self.refresh()
         url = self.http_url_base + f'/api/{model}/{id}/'
         s = requests.delete(
                 url,
