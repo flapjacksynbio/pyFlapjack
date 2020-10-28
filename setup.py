@@ -21,7 +21,7 @@ setup(name='flapjack',
 	    'websockets',
 	    'matplotlib',
 	    'seaborn',
-	    'pysbol',
+	    'sbol2',
 	    'psutil'
         ],
     setup_requires=[
@@ -39,7 +39,7 @@ setup(name='flapjack',
 	    'websockets',
 	    'matplotlib',
 	    'seaborn',
-	    'pysbol',
+	    'sbol2',
 	    'psutil'
         ],
     packages=['flapjack'],
