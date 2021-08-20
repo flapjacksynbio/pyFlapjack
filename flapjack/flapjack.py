@@ -4,11 +4,12 @@ from requests_jwt import JWTAuth
 import websockets
 import asyncio
 import json
-import plotly
+import plo
 from plotly.io import from_json, read_json
 from tqdm import tqdm
 import pandas as pd
 import numpy as np
+import sbol3
 
 plot_option_keys = [
     'normalize',
@@ -373,3 +374,41 @@ class Flapjack():
 
 
 
+##testing
+    def sbol_doc(self, **kwargs):
+        return asyncio.run(self._sbol_doc(**kwargs))
+        
+    async def _sbol_doc(self, **kwargs):
+        self.refresh()
+        uri = self.ws_url_base + '/ws/registry/sbol_doc?token=' + self.access_token
+
+        # Get the parameter dict from arguments
+        params = self.parse_params(**kwargs)
+        if len(params)==0:
+            return
+        
+        # Data to send in request
+        payload = {
+            "type":"download",
+            "parameters": params
+        }
+        async with websockets.connect(uri, max_size=1e10) as websocket:
+            await websocket.send(json.dumps(payload))
+            response_json = await websocket.recv()
+            response_data = json.loads(response_json)
+            if response_data['type']=='error':
+                msg = response_data['data']['message']
+                print(f'Error: {msg}')
+            if response_data['type']=='sbol':
+                xml_string = response_data['data']
+                if xml_string:
+                    #create SBOL socument
+                    doc = sbol3.Document()
+                    doc.read_string(xml_string)
+                    return doc
+                   
+                else:
+                    return
+            else:
+                print('Error: the server returned an invalid response')
+                return
