@@ -22,7 +22,7 @@ setup(name='flapjack',
 	    'matplotlib',
 	    'seaborn',
 	    'sbol2',
-	    'psutil'
+	    'psutil==5.8.0'
         ],
     setup_requires=[
         'numpy', 
@@ -40,7 +40,7 @@ setup(name='flapjack',
 	    'matplotlib',
 	    'seaborn',
 	    'sbol2',
-	    'psutil'
+	    'psutil==5.8.0'
         ],
     packages=['flapjack'],
     python_requires='>=3',
