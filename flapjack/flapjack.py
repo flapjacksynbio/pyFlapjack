@@ -4,12 +4,12 @@ from requests_jwt import JWTAuth
 import websockets
 import asyncio
 import json
-import plo
+import plotly
 from plotly.io import from_json, read_json
 from tqdm import tqdm
 import pandas as pd
 import numpy as np
-import sbol3
+#import sbol3
 
 plot_option_keys = [
     'normalize',
@@ -47,6 +47,7 @@ class Flapjack():
     def __init__(self, url_base = 'localhost:8000'):
         self.http_url_base = 'http://' + url_base
         self.ws_url_base = 'ws://' + url_base
+        self.url_base = url_base
         self.access_token = None
         self.refresh_token = None
         self.username = None
@@ -366,47 +367,6 @@ class Flapjack():
                 fig_json = response_data['data']['figure']
                 if fig_json:
                     return from_json(fig_json)
-                else:
-                    return
-            else:
-                print('Error: the server returned an invalid response')
-                return
-
-
-
-##testing
-    def sbol_doc(self, **kwargs):
-        return asyncio.run(self._sbol_doc(**kwargs))
-        
-    async def _sbol_doc(self, **kwargs):
-        self.refresh()
-        uri = self.ws_url_base + '/ws/registry/sbol_doc?token=' + self.access_token
-
-        # Get the parameter dict from arguments
-        params = self.parse_params(**kwargs)
-        if len(params)==0:
-            return
-        
-        # Data to send in request
-        payload = {
-            "type":"download",
-            "parameters": params
-        }
-        async with websockets.connect(uri, max_size=1e10) as websocket:
-            await websocket.send(json.dumps(payload))
-            response_json = await websocket.recv()
-            response_data = json.loads(response_json)
-            if response_data['type']=='error':
-                msg = response_data['data']['message']
-                print(f'Error: {msg}')
-            if response_data['type']=='sbol':
-                xml_string = response_data['data']
-                if xml_string:
-                    #create SBOL socument
-                    doc = sbol3.Document()
-                    doc.read_string(xml_string)
-                    return doc
-                   
                 else:
                     return
             else:
