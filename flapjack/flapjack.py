@@ -119,7 +119,7 @@ class Flapjack():
         if len(existing) and confirm:
             confirmed = input(f'One or more {model} already exists, type "yes" to replace them:')
             if confirmed != 'yes':
-                return False
+                return existing
             else:
                 for id in existing.id:
                     self.delete(model, id, confirm=False)
