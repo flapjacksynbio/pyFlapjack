@@ -112,9 +112,17 @@ class Flapjack():
             print(s.text)
             return False
 
-    def create(self, model, **kwargs):
+    def create(self, model, confirm=True, **kwargs):
         self.refresh()
         url = self.http_url_base + f'/api/{model}/'
+        existing = self.get(model, **kwargs)
+        if len(existing) and confirm:
+            confirmed = input(f'One or more {model} already exists, type "yes" to replace them:')
+            if confirmed != 'yes':
+                return False
+            else:
+                for id in existing.id:
+                    self.delete(model, id, confirm=False)
         s = requests.post(
                 url,
                 headers={'Authorization': 'Bearer ' + self.access_token},
