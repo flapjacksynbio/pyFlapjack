@@ -1,6 +1,6 @@
 # pyFlapjack
 
-pyFlapjack is our Python package that allows you to interface the Flapjack API with Pandas and Numpy stack, so that you can easily implement it in your projects.
+pyFlapjack is our Python package that allows you to interface the [Flapjack](http://flapjack.rudge-lab.org) with Pandas and Numpy stack, so that you can easily implement it in your projects.
 
 ### Instalation
 
