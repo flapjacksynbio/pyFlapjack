@@ -8,7 +8,7 @@ Installing pyFlapjack is quite simple. Please refer to our Wiki for installation
 
 ### Tutorials
 
-Now that you have pyFlapjack installed you can familiarize yourself with the tool using the [Jupyter tutorials](https://github.com/RudgeLab/pyFlapjack/tree/master/notebooks) designed for this purpose.
+Now that you have pyFlapjack installed you can familiarize yourself with the tool using the [Jupyter notebook tutorials](https://github.com/RudgeLab/pyFlapjack/tree/master/notebooks) designed for this purpose.
 
 ## Related repositories
 
