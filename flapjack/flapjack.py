@@ -20,7 +20,9 @@ plot_option_keys = [
 index_params = [
     'biomass_signal',
     'ref_signal',
-    'analyte'
+    'analyte',
+    'analyte1',
+    'analyte2'
 ]
 
 replace_columns_with_ids = [
