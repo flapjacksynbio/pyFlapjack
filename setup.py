@@ -1,11 +1,22 @@
-#!/usr/bin/env python
+from setuptools import setup, find_packages
 
-import os
-#from distutils.core import setup
-from setuptools import setup
-import subprocess
+
+with open('README.md', 'r') as ld:
+    long_description = ld.read()
 
 setup(name='flapjack',
+    version='1.0.0',
+    author='Tim Rudge',
+    author_email='Tim.Rudge@newcastle.ac.uk ',
+    description='Python package that interfaces the Flapjack API',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
+    url='https://github.com/RudgeLab/pyFlapjack',
+    classifiers=[
+        'Programming Language :: Python :: 3',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
+        ],
     install_requires=[
         'numpy==1.21.2',
         'scipy==1.7.1',
@@ -32,10 +43,6 @@ setup(name='flapjack',
         'websockets==10.0',
         'matplotlib==3.4.3',
         ],
-    packages=['flapjack'],
+    packages=find_packages(),
     python_requires='>=3',
-    version='v0.0'
 )
-
-# add packages via conda:
-# conda install -c plotly plotly-orca
