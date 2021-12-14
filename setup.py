@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 with open('README.md', 'r') as ld:
     long_description = ld.read()
 
-setup(name='flapjack',
+setup(name='pyflapjack',
     version='1.0.0',
     author='Tim Rudge',
     author_email='Tim.Rudge@newcastle.ac.uk ',
