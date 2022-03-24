@@ -2,8 +2,8 @@
 
 pyFlapjack is our Python package that allows you to interface the [Flapjack](http://flapjack.rudge-lab.org) with Pandas and Numpy stack, so that you can easily implement it in your projects.
 
-<img src="https://github.com/RudgeLab/pyFlapjack/blob/stable/images/Flapjack%20Dark.svg#gh-light-mode-only" alt="LOICA logo" width="250"/>
-<img src="https://github.com/RudgeLab/pyFlapjack/blob/stable/images/Flapjack%20Light.svg#gh-dark-mode-only" alt="LOICA night logo" width="250"/>
+<img src="https://github.com/RudgeLab/pyFlapjack/blob/stable/images/Flapjack_Dark.svg#gh-light-mode-only" alt="LOICA logo" width="250"/>
+<img src="https://github.com/RudgeLab/pyFlapjack/blob/stable/images/Flapjack_Light.svg#gh-dark-mode-only" alt="LOICA night logo" width="250"/>
 
 ![PyPI](https://img.shields.io/pypi/v/pyflapjack)
 [![Documentation Status](https://readthedocs.org/projects/pyflapjack/badge/?version=latest)](https://pyflapjack.readthedocs.io/en/latest/?badge=latest)
