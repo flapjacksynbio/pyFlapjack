@@ -18,7 +18,7 @@ pyFlapjack is our Python package that allows you to interface the
 `Flapjack <http://flapjack.rudge-lab.org>`__ with Pandas and Numpy
 stack, so that you can easily implement it in your projects.
 
-.. figure:: ../images/Flapjack%20Dark.svg
+.. figure:: ../images/Flapjack_Dark.svg
    :width: 250
 
 |PyPI| |PyPI - Python Version| |PyPI - License|
