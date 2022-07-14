@@ -77,6 +77,7 @@ class Flapjack():
                 self.access_token = data['access']
                 self.refresh_token = data['refresh']
                 self.username = username
+                print('Logged in successfully.')
 
     def log_out(self):
         if self.username:
@@ -91,7 +92,29 @@ class Flapjack():
                 pass #print(f'Log out failed for {self.username}.')
         else:
             print('No user logged in.')
-                
+
+    def sign_up(self, username, mail, password, password_confirm):
+        try:
+            s = requests.post(
+                self.http_url_base+'/api/auth/register/',
+                data={
+                    'username':username,
+                    'email':mail,
+                    'password':password,
+                    'password2':password_confirm
+                }
+            )
+        except:
+            print(f'Sign up failed.')
+        else:
+            if self.handle_response(s):
+                self.username = username
+                data = s.json()
+                self.access_token = data['access']
+                self.refresh_token = data['refresh']
+                self.username = username
+                print('Account successfully created.')
+
     def refresh(self):
         s = requests.post(
             self.http_url_base+'/api/auth/refresh/', 

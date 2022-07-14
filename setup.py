@@ -5,7 +5,7 @@ with open('README.md', 'r') as ld:
     long_description = ld.read()
 
 setup(name='pyflapjack',
-    version='1.0.0',
+    version='1.0.6',
     author='Tim Rudge',
     author_email='Tim.Rudge@newcastle.ac.uk ',
     description='Python package that interfaces the Flapjack API',
@@ -20,7 +20,7 @@ setup(name='pyflapjack',
     install_requires=[
         'numpy==1.21.2',
         'scipy==1.8.0',
-        'pandas==1.3.3',
+        'pandas>=1.3.3',
         'requests==2.26.0',
         'tqdm==4.62.3',
         'plotly==5.3.1',
@@ -28,13 +28,13 @@ setup(name='pyflapjack',
         'nest_asyncio==1.5.1',
         'requests_jwt==0.5.3',
         'websockets==10.0',
-        'matplotlib==3.4.3',
-        'kaleido'
+        'matplotlib>=3.4.3',
+        'kaleido==0.2.1'
         ],
     setup_requires=[
         'numpy==1.21.2',
         'scipy==1.8.0',
-        'pandas==1.3.3',
+        'pandas>=1.3.3',
         'requests==2.26.0',
         'tqdm==4.62.3',
         'plotly==5.3.1',
@@ -42,8 +42,8 @@ setup(name='pyflapjack',
         'nest_asyncio==1.5.1',
         'requests_jwt==0.5.3',
         'websockets==10.0',
-        'matplotlib==3.4.3',
-        'kaleido'
+        'matplotlib>=3.4.3',
+        'kaleido==0.2.1'
         ],
     packages=find_packages(),
     python_requires='>=3',
