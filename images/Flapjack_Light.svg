@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 250 340" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g id="Flapjack" transform="matrix(0.308049,0,0,0.308049,8.22652,-80.282)">
+        <g transform="matrix(1,0,0,1,-0.880882,293.693)">
+            <path d="M145.08,424.575L145.08,712C145.08,716.826 147.65,721.286 151.826,723.704L409.069,872.704C413.262,875.133 418.435,875.133 422.628,872.704L679.871,723.704C684.047,721.286 686.617,716.826 686.617,712L686.617,420.951C686.617,416.118 684.039,411.653 679.854,409.237L425.75,262.53L272.25,-3.341C268.515,-9.81 260.242,-12.027 253.773,-8.291L-3.47,140.228C-9.939,143.963 -12.156,152.235 -8.421,158.705L145.08,424.575ZM158.605,712L158.605,420.951L3.293,151.942L260.536,3.422L415.848,272.432L673.091,420.951L673.091,712L415.848,861L158.605,712Z" style="fill:rgb(230,247,255);"/>
+        </g>
+        <g transform="matrix(0.630497,-0.364018,0.460868,0.798247,-124.087,414.364)">
+            <rect x="129" y="98" width="408" height="337" style="fill:url(#_Linear1);"/>
+        </g>
+        <g transform="matrix(1,0,0,1,-0.880882,293.693)">
+            <path d="M158.605,420.951L158.605,712L415.848,861L415.848,569L158.605,420.951Z" style="fill:url(#_Linear2);"/>
+        </g>
+        <g transform="matrix(-1,0,0,1,830.816,293.693)">
+            <path d="M158.605,420.951L158.605,712L415.848,861L415.848,569L158.605,420.951Z" style="fill:url(#_Linear3);"/>
+        </g>
+        <g transform="matrix(1,0,0,1,-0.880882,293.693)">
+            <path d="M415.848,272.432L158.605,420.951L415.848,569L415.848,272.432Z" style="fill:url(#_Linear4);"/>
+        </g>
+        <g transform="matrix(-1,0,0,1,830.816,293.693)">
+            <path d="M415.848,272.432L158.605,420.951L415.848,569L415.848,272.432Z" style="fill:url(#_Linear5);"/>
+        </g>
+        <g transform="matrix(1.62312,0,0,1.62312,-3693.93,-293.455)">
+            <text x="2336.93px" y="981.237px" style="font-family:'HelveticaNeue-Medium', 'Helvetica Neue', sans-serif;font-weight:500;font-size:100px;fill:rgb(230,247,255);">Flapjack</text>
+        </g>
+    </g>
+    <defs>
+        <linearGradient id="_Linear1" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1.42109e-13,337,-426.662,1.13687e-13,537,98)"><stop offset="0" style="stop-color:rgb(0,0,255);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(75,0,153);stop-opacity:1"/></linearGradient>
+        <linearGradient id="_Linear2" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-257.243,3.15032e-14,-3.15032e-14,-257.243,415.848,640.975)"><stop offset="0" style="stop-color:rgb(0,255,255);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(0,95,148);stop-opacity:1"/></linearGradient>
+        <linearGradient id="_Linear3" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-257.243,0,0,257.243,415.848,640.975)"><stop offset="0" style="stop-color:rgb(255,212,42);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(187,118,0);stop-opacity:1"/></linearGradient>
+        <linearGradient id="_Linear4" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-1.13543e-13,296.568,-296.568,-1.13543e-13,415.848,272.432)"><stop offset="0" style="stop-color:rgb(255,0,0);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(109,0,69);stop-opacity:1"/></linearGradient>
+        <linearGradient id="_Linear5" x1="0" y1="0" x2="1" y2="0" gradientUnits="userSpaceOnUse" gradientTransform="matrix(4.76918e-14,296.568,296.568,-4.76918e-14,415.848,272.432)"><stop offset="0" style="stop-color:rgb(0,255,0);stop-opacity:1"/><stop offset="1" style="stop-color:rgb(101,66,0);stop-opacity:1"/></linearGradient>
+    </defs>
+</svg>
