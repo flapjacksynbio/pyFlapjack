@@ -114,10 +114,13 @@ class Flapjack():
             print(s.text)
             return False
 
-    def create(self, model, confirm=True, **kwargs):
+    def create(self, model, confirm=True, overwrite=False, **kwargs):
+        if confirm and overwrite:
+            raise ValueError('Cannot confirm and overwrite at the same time.')
         self.refresh()
         url = self.http_url_base + f'/api/{model}/'
         existing = self.get(model, **kwargs)
+
         if len(existing) and confirm:
             confirmed = input(f'One or more {model} already exists, type "yes" to replace them:')
             if confirmed != 'yes':
@@ -125,6 +128,19 @@ class Flapjack():
             else:
                 for id in existing.id:
                     self.delete(model, id, confirm=False)
+
+        elif confirm == False:
+            if overwrite:
+                for id in existing.id:
+                        self.delete(model, id, confirm=False)
+                s = requests.post(
+                    url,
+                    headers={'Authorization': 'Bearer ' + self.access_token},
+                    data=kwargs
+                )
+            elif overwrite == False:
+                return existing
+
         s = requests.post(
                 url,
                 headers={'Authorization': 'Bearer ' + self.access_token},
