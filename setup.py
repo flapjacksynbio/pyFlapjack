@@ -5,7 +5,7 @@ with open('README.md', 'r') as ld:
     long_description = ld.read()
 
 setup(name='pyflapjack',
-    version='1.0.0',
+    version='1.0.6',
     author='Tim Rudge',
     author_email='Tim.Rudge@newcastle.ac.uk ',
     description='Python package that interfaces the Flapjack API',
