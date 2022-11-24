@@ -139,7 +139,8 @@ class Flapjack():
                     data=kwargs
                 )
             elif len(existing) and overwrite == False:
-                    return existing 
+                print(f'Returning exististing model, {model}')
+                return existing 
 
         s = requests.post(
                 url,
