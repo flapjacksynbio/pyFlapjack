@@ -138,8 +138,9 @@ class Flapjack():
                     headers={'Authorization': 'Bearer ' + self.access_token},
                     data=kwargs
                 )
-            elif overwrite == False:
-                return existing
+            elif len(existing) and overwrite == False:
+                print(f'Returning exististing model, {model}')
+                return existing 
 
         s = requests.post(
                 url,

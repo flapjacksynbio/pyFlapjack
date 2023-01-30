@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyflapjack"
+version = "1.0.6"
+description = "Python package that interfaces the Flapjack API"
+readme = "README.md"
+requires-python = ">=3.7"
+license = {file = "LICENSE"}
+keywords = ["flapjack", "data", "experimental", "analysis", "synthetic biology"]
+authors = [
+  { name="Timothy Rudge", email="tim.rudge@ncl.ac.uk" },
+  { name="Gonzalo Vidal", email="g.a.vidal-pena2@ncl.ac.uk" }
+]
+maintainers = [
+  {name = "Gonzalo Vidal", email = "g.a.vidal-pena2@ncl.ac.uk"}
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+  'numpy==1.21.2',
+  'scipy==1.8.0',
+  'pandas==1.3.3',
+  'requests==2.26.0',
+  'tqdm==4.62.3',
+  'plotly==5.3.1',
+  'asyncio==3.4.3',
+  'nest_asyncio==1.5.1',
+  'requests_jwt==0.5.3',
+  'websockets==10.0',
+  'matplotlib==3.4.3',
+  'kaleido'
+]
+
+[project.optional-dependencies]
+test = [
+  "pytest < 5.0.0",
+  "pytest-cov[all]"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/RudgeLab/pyFlapjack"
+"Bug Tracker" = "https://github.com/RudgeLab/pyFlapjack/issues"
