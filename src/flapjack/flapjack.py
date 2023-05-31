@@ -138,7 +138,7 @@ class Flapjack():
                     headers={'Authorization': 'Bearer ' + self.access_token},
                     data=kwargs
                 )
-            elif len(existing) and overwrite == False:
+            elif len(existing) and not overwrite:
                 print(f'Returning exististing model, {model}')
                 return existing 
 
@@ -190,7 +190,7 @@ class Flapjack():
             url = data['next']
         df = pd.DataFrame(results)
         # Convert ids from np.int64 to int
-        df.index = df.index.astype(np.int)
+        df.index = df.index.astype(int)
         return df
     
     def parse_params(self, **kwargs):
