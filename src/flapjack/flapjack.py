@@ -57,7 +57,26 @@ class Flapjack():
         
     def handle_response(self, s):
         return True
-        
+
+    def register(self, username, password, password2, email):
+        try:
+            s = requests.post(
+                self.http_url_base+'/api/auth/register/', 
+                data={
+                    'username':username, 
+                    'password':password,
+                    'password2':password2,
+                    'email':email
+                }
+            )
+        except:
+            print(f'Register failed.')
+        else:
+            if self.handle_response(s):
+                self.username = username
+                data = s.json()
+                self.access_token = data['access']
+                self.refresh_token = data['refresh']
     
     def log_in(self, username, password):
         try:
