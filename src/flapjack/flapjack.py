@@ -110,6 +110,14 @@ class Flapjack():
                 pass #print(f'Log out failed for {self.username}.')
         else:
             print('No user logged in.')
+
+    def log_in_token(self, username, access_token, refresh_token):
+        try:
+                self.username = username
+                self.access_token = access_token
+                self.refresh_token = refresh_token
+        except:
+            print(f'Invalid token')
                 
     def refresh(self):
         s = requests.post(
