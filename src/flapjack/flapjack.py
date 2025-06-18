@@ -58,7 +58,55 @@ class Flapjack():
     def handle_response(self, s):
         return True
         
-    
+    # Sign in to the server
+
+    def sign_up(self, username, password, email):
+        try:
+            s = requests.post(
+                self.http_url_base+'/api/auth/sign_up/', 
+                data={
+                    'username':username, 
+                    'password':password,
+                    'email':email
+                }
+            )
+        except:
+            print(f'Sign up failed.')
+        else:
+            if self.handle_response(s):
+                print(f'Successfully signed up as {username}.')
+                self.log_in(username, password)
+
+    def register(self, username, password, password2, email):
+        try:
+            s = requests.post(
+                self.http_url_base+'/api/auth/register/', 
+                data={
+                    'username':username, 
+                    'password':password,
+                    'password2':password2,
+                    'email':email
+                }
+            )
+        except:
+            print(f'Register failed.')
+        else:
+            if self.handle_response(s):
+                self.username = username
+                data = s.json()
+                self.access_token = data['access']
+                self.refresh_token = data['refresh']
+
+    def log_in_token(self, username, access_token, refresh_token):
+        try:
+                self.username = username
+                self.access_token = access_token
+                self.refresh_token = refresh_token
+        except:
+            print(f'Invalid token')
+
+
+
     def log_in(self, username, password):
         try:
             s = requests.post(
@@ -76,7 +124,6 @@ class Flapjack():
                 data = s.json()
                 self.access_token = data['access']
                 self.refresh_token = data['refresh']
-                self.username = username
 
     def log_out(self):
         if self.username:
@@ -84,7 +131,7 @@ class Flapjack():
                 s = requests.post(
                     self.http_url_base+'/api/auth/log_out/', 
                     data={
-                        'username':username
+                        'username':self.username
                     }
                 )
             except:
