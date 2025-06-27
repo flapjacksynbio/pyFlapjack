@@ -260,7 +260,8 @@ class Flapjack():
         
     async def _upload_measurements(self, df, **kwargs):
         self.refresh()
-        uri = self.ws_url_base + '/ws/registry/measurements?token=' + self.access_token
+        #uri = self.ws_url_base + '/ws/registry/measurements?token=' + self.access_token
+        uri = 'wss://charmmefj-api.synbiohub.org' + '/registry/measurements?token=' + self.access_token
 
         # Get the parameter dict from arguments
         params = self.parse_params(**kwargs)
