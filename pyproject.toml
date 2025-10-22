@@ -34,7 +34,7 @@ dependencies = [
   'nest_asyncio==1.5.1',
   'requests_jwt==0.5.3',
   'websockets==10.0',
-  'matplotlib==3.4.3',
+  'matplotlib>=3.10',
   'kaleido==0.2.1'
 ]
 
