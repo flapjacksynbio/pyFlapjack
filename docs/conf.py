@@ -36,7 +36,7 @@ extensions = [
 ]
 
 # See https://sphinx-autoapi.readthedocs.io/en/latest/reference/config.html
-autoapi_dirs = ['../flapjack']
+autoapi_dirs = ['../src/flapjack']
 # autoapi_options = ['members', 'undoc-members', 'show-inheritance',
 #                   'show-module-summary', 'special-members']
 autoapi_type = 'python'
