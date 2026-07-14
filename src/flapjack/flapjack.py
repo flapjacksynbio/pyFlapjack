@@ -1,3 +1,4 @@
+import io
 import requests
 from requests.exceptions import HTTPError
 from requests_jwt import JWTAuth
@@ -307,7 +308,7 @@ class Flapjack():
             "parameters": params,
             "data": data
         }
-        async with websockets.connect(uri, max_size=1e10) as websocket:
+        async with websockets.connect(uri, max_size=int(1e10)) as websocket:
             await websocket.send(json.dumps(payload))
             response_json = await websocket.recv()
             response_data = json.loads(response_json)
@@ -338,7 +339,7 @@ class Flapjack():
             "type":"measurements",
             "parameters": params
         }
-        async with websockets.connect(uri, max_size=1e10) as websocket:
+        async with websockets.connect(uri, max_size=int(1e10)) as websocket:
             await websocket.send(json.dumps(payload))
             response_json = await websocket.recv()
             response_data = json.loads(response_json)
@@ -348,7 +349,7 @@ class Flapjack():
             if response_data['type']=='measurements':
                 df_json = response_data['data']
                 if df_json:
-                    return pd.read_json(df_json)
+                    return pd.read_json(io.StringIO(df_json))
                 else:
                     return
             else:
@@ -387,7 +388,7 @@ class Flapjack():
                 while response_data['type']=='progress_update':
                 #while progress < 100:
                     progress = response_data['progress']
-                    rows.append(pd.read_json(response_data['data']))
+                    rows.append(pd.read_json(io.StringIO(response_data['data'])))
                     response_json = await websocket.recv()
                     response_data = json.loads(response_json)
                     pbar.update(progress-progress_prev)
@@ -396,7 +397,7 @@ class Flapjack():
                 pbar.close()
             result = pd.DataFrame()
             if len(rows):
-                result = result.append(rows)
+                result = pd.concat(rows, ignore_index=True)
             print('Returning dataframe')
             return result
             '''
@@ -428,7 +429,7 @@ class Flapjack():
             "type":"plot",
             "parameters": params
         }
-        async with websockets.connect(uri, max_size=1e10) as websocket:
+        async with websockets.connect(uri, max_size=int(1e10)) as websocket:
             await websocket.send(json.dumps(payload))
             response_json = await websocket.recv()
             response_data = json.loads(response_json)
