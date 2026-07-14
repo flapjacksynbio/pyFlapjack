@@ -7,7 +7,7 @@ name = "pyflapjack"
 version = "1.1.0"
 description = "Python package that interfaces the Flapjack API"
 readme = "README.md"
-requires-python = ">=3.7,<3.11"
+requires-python = ">=3.9"
 license = {file = "LICENSE"}
 keywords = ["flapjack", "data", "experimental", "analysis", "synthetic biology"]
 authors = [
@@ -24,18 +24,17 @@ classifiers = [
 ]
 
 dependencies = [
-  'numpy== 1.26.2',
-  'scipy==1.11.0',
-  'pandas==1.5.3',
+  'numpy>=1.26',
+  'scipy>=1.11',
+  'pandas>=2.0',
   'requests>=2.25.1',
-  'tqdm==4.62.3',
-  'plotly==5.3.1',
-  'asyncio==3.4.3',
-  'nest_asyncio==1.5.1',
-  'requests_jwt==0.5.3',
-  'websockets==10.0',
+  'tqdm>=4.62',
+  'plotly>=5.3',
+  'nest_asyncio>=1.5',
+  'requests_jwt>=0.5.3',
+  'websockets>=12',
   'matplotlib>=3.10',
-  'kaleido==0.2.1'
+  'kaleido>=0.2.1'
 ]
 
 [project.optional-dependencies]
